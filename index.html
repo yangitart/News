@@ -3,22 +3,22 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>VitaCora &middot; Bit&aacute;cora personal</title>
-<meta name="description" content="VitaCora: bit&aacute;cora personal con notas y reflexiones organizadas por tema y por fecha.">
+<title>VitaCora &middot; Repositorio de notas</title>
+<meta name="description" content="VitaCora: repositorio personal de notas, lecturas y reflexiones. Cada entrada tiene su propio enlace para compartir.">
 <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,500;0,600;1,500&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;1,6..72,500;1,6..72,600&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css">
 </head>
-<body class="texture">
+<body>
 
 <header class="site-header">
   <div class="container site-header__inner">
     <a class="brand" href="index.html">
-      <span class="brand__seal"><img src="assets/img/favicon.svg" alt="" width="34" height="34"></span>
+      <span class="brand__seal"><img src="assets/img/favicon.svg" alt="" width="32" height="32"></span>
       VitaCora
-      <span class="brand__tag">&middot; bit&aacute;cora personal</span>
+      <span class="brand__tag">&middot; repositorio personal</span>
     </a>
     <button class="nav-toggle" aria-expanded="false" aria-label="Abrir men&uacute;">
       <span></span><span></span><span></span>
@@ -31,53 +31,51 @@
 </header>
 
 <main>
+
   <section class="hero">
     <div class="container hero__inner">
-      <span class="hero__stamp">Entrada abierta &middot; en construcci&oacute;n permanente</span>
-      <h1 class="display-1 hero__title">VitaCora</h1>
-      <p class="lead hero__tagline">Una bit&aacute;cora personal: notas, lecturas y cosas que vale la pena
-      anotar antes de olvidarlas, organizadas por tema y por fecha.</p>
-      <div class="hero__actions">
-        <a class="btn btn--seal" href="repositorio.html">Ver el repositorio completo</a>
-        <a class="btn btn--ghost" href="#ultimas">Ver &uacute;ltimas entradas</a>
-      </div>
-      <div class="hero__stats">
-        <div>
-          <span class="hero__stat-num" id="stat-total">&mdash;</span>
-          <span class="hero__stat-label">Entradas</span>
+      <div class="hero__left">
+        <div class="hero__kicker">
+          <span class="eyebrow">En construcci&oacute;n permanente</span>
         </div>
-        <div>
-          <span class="hero__stat-num" id="stat-temas">&mdash;</span>
-          <span class="hero__stat-label">Temas</span>
-        </div>
-        <div>
-          <span class="hero__stat-num" id="stat-ultima">&mdash;</span>
-          <span class="hero__stat-label">&Uacute;ltima entrada</span>
+        <h1 class="display-1 hero__title">VitaCora</h1>
+        <p class="lead hero__sub">
+          Un repositorio personal. Notas sobre tecnolog&iacute;a, lecturas y cosas
+          que no quiero olvidar. Cada entrada tiene su propio enlace, listo para compartir.
+        </p>
+        <div class="hero__action">
+          <a class="btn btn--ghost" href="repositorio.html">Explorar el repositorio &rarr;</a>
         </div>
       </div>
+      <div class="hero__counter" id="hero-counter" aria-hidden="true">01</div>
+    </div>
+    <div class="hero__rule"></div>
+  </section>
+
+  <section class="section" style="padding-top: var(--s5);">
+    <div class="container">
+      <div class="section-label">
+        <span class="eyebrow">&mdash;&nbsp; &Uacute;ltima entrada</span>
+      </div>
+      <div id="entry-featured"></div>
     </div>
   </section>
 
-  <section class="section" id="ultimas">
+  <section class="section" style="padding-top: var(--s4);">
     <div class="container">
-      <div class="section-head">
-        <div>
-          <span class="eyebrow section-head__eyebrow">&Uacute;ltimas p&aacute;ginas</span>
-          <h2 class="display-2">Entradas recientes</h2>
-        </div>
-        <a class="btn btn--ghost" href="repositorio.html">Ver todas &rarr;</a>
+      <div class="section-label section-label__between">
+        <span class="eyebrow">&mdash;&nbsp; M&aacute;s recientes</span>
+        <a class="btn btn--ghost" href="repositorio.html" style="padding:.55rem 1rem;font-size:.68rem">Ver todas &rarr;</a>
       </div>
-      <div class="feed" id="feed-entradas">
-        <!-- Las tarjetas se generan autom&aacute;ticamente desde assets/js/data.js -->
-      </div>
+      <div class="feed" id="feed-entradas"></div>
     </div>
   </section>
+
 </main>
 
 <footer class="site-footer">
   <div class="container site-footer__inner">
     <span>VitaCora &copy; <span id="anio-actual"></span></span>
-    <span>Hecho con HTML, CSS y JS &mdash; sin frameworks</span>
   </div>
 </footer>
 

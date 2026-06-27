@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title id="entrada-titulo-pagina">Entrada &middot; VitaCora</title>
+<meta id="entrada-meta-desc" name="description" content="Entrada de VitaCora">
 <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,7 +18,7 @@
     <a class="brand" href="index.html">
       <span class="brand__seal"><img src="assets/img/favicon.svg" alt="" width="34" height="34"></span>
       VitaCora
-      <span class="brand__tag">&middot; bit&aacute;cora personal</span>
+      <span class="brand__tag">&middot; repositorio personal</span>
     </a>
     <button class="nav-toggle" aria-expanded="false" aria-label="Abrir men&uacute;">
       <span></span><span></span><span></span>
@@ -33,7 +34,7 @@
   <section class="section">
     <div class="container" style="max-width:760px">
       <div id="entrada-contenido">
-        <!-- contenido generado desde assets/js/data.js seg&uacute;n ?id= en la URL -->
+        <!-- contenido generado desde assets/js/main.js seg&uacute;n ?id= en la URL -->
       </div>
     </div>
   </section>
@@ -42,9 +43,11 @@
 <footer class="site-footer">
   <div class="container site-footer__inner">
     <span>VitaCora &copy; <span id="anio-actual"></span></span>
-    <span>Hecho con HTML, CSS y JS &mdash; sin frameworks</span>
   </div>
 </footer>
+
+<!-- Toast de copiado -->
+<div class="share-toast" id="share-toast" aria-live="polite">Enlace copiado</div>
 
 <script src="assets/js/data.js"></script>
 <script src="assets/js/main.js"></script>
