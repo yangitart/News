@@ -1,0 +1,11 @@
+# ads.txt — Autorización de vendedores de anuncios digitales (IAB).
+# Mientras este archivo solo tenga comentarios, no autoriza a nadie a vender
+# anuncios en tu nombre (es válido y no rompe nada).
+#
+# Cuando tengas tu cuenta de Google AdSense (u otra red), sustituye esta
+# sección por la línea exacta que te entregue tu red. Para AdSense suele ser:
+#
+# google.com, pub-0000000000000000, DIRECT, f08c47fec0942fa0
+#
+# Usa tu propio "pub-..." (lo encuentras en tu panel de AdSense, en
+# Cuenta > Información de la cuenta).

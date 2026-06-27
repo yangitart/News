@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="VitaCora">
+  <!-- ===================================================================
+       Logo temporal de VitaCora. Reemplaza este archivo (mismo nombre,
+       assets/img/logo.svg) cuando tengas tu logo definitivo: no necesitas
+       tocar HTML/CSS, todo lo referencia desde aquí.
+       =================================================================== -->
+  <circle cx="60" cy="60" r="57" fill="#0A0E14" stroke="#C8933A" stroke-width="2"/>
+  <circle cx="60" cy="60" r="47" fill="none" stroke="#C8933A" stroke-width="1" opacity=".45"/>
+  <text x="60" y="32" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="8.5" letter-spacing="2.2" fill="#C8933A">VITACORA</text>
+  <path d="M39 40 L60 88 L81 40" fill="none" stroke="#EDE4D0" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="60" cy="90" r="3.4" fill="#C8933A"/>
+</svg>

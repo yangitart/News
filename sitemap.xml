@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Sitemap de VitaCora.
+  Solo incluye las páginas fijas (inicio y repositorio): el repositorio
+  enlaza a todas las entradas, así que los buscadores las descubren solas
+  sin necesidad de mantener una lista que se desactualice. Si más adelante
+  quieres listar cada entrada aquí también, copia el bloque <url> y cambia
+  el <loc> por "entrada.html?id=XXXX".
+  Recuerda cambiar "tu-usuario" y "tu-repositorio" por los reales.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://tu-usuario.github.io/tu-repositorio/index.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://tu-usuario.github.io/tu-repositorio/repositorio.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+</urlset>

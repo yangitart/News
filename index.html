@@ -1,85 +1,158 @@
 <!doctype html>
 <html lang="es">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>VitaCora &middot; Repositorio de notas</title>
-<meta name="description" content="VitaCora: repositorio personal de notas, lecturas y reflexiones. Cada entrada tiene su propio enlace para compartir.">
-<link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;1,6..72,500;1,6..72,600&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css">
-</head>
-<body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>VitaCora &middot; Repositorio de notas</title>
+    <meta
+      name="description"
+      content="VitaCora: notas personales sobre tecnología, lecturas y reflexiones. Cada entrada tiene su propio enlace para compartir."
+    />
+    <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500;1,6..72,600&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <meta name="theme-color" content="#0A0E14" />
+    <link rel="manifest" href="site.webmanifest" />
+    <link
+      rel="canonical"
+      href="https://tu-usuario.github.io/tu-repositorio/index.html"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="VitaCora" />
+    <meta
+      property="og:title"
+      content="VitaCora &middot; Repositorio de notas"
+    />
+    <meta
+      property="og:description"
+      content="VitaCora: notas personales sobre tecnología, lecturas y reflexiones. Cada entrada tiene su propio enlace para compartir."
+    />
+    <meta
+      property="og:url"
+      content="https://tu-usuario.github.io/tu-repositorio/index.html"
+    />
+    <meta name="twitter:card" content="summary" />
+    <meta
+      name="twitter:title"
+      content="VitaCora &middot; Repositorio de notas"
+    />
+    <meta
+      name="twitter:description"
+      content="VitaCora: notas personales sobre tecnología, lecturas y reflexiones."
+    />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container site-header__inner">
+        <a class="brand" href="index.html">
+          <span class="brand__seal"
+            ><img src="assets/img/logo.svg" alt="" width="34" height="34"
+          /></span>
+          <span class="brand__name">VitaCora</span>
+        </a>
+        <button
+          class="nav-toggle"
+          aria-expanded="false"
+          aria-label="Abrir men&uacute;"
+        >
+          <span></span><span></span><span></span>
+        </button>
+        <nav class="nav">
+          <a class="nav__link" href="index.html" aria-current="page"
+            ><svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M3 11.5 12 4l9 7.5" />
+              <path
+                d="M5.5 10v9a1 1 0 0 0 1 1H9a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h2.5a1 1 0 0 0 1-1v-9"
+              /></svg
+            >Inicio</a
+          >
+          <a class="nav__link" href="repositorio.html"
+            ><svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <rect x="3" y="7" width="18" height="13" rx="1.2" />
+              <path d="M3 7 5 3h14l2 4" />
+              <path d="M10 12h4" /></svg
+            >Repositorio</a
+          >
+        </nav>
+      </div>
+    </header>
 
-<header class="site-header">
-  <div class="container site-header__inner">
-    <a class="brand" href="index.html">
-      <span class="brand__seal"><img src="assets/img/favicon.svg" alt="" width="32" height="32"></span>
-      VitaCora
-      <span class="brand__tag">&middot; repositorio personal</span>
-    </a>
-    <button class="nav-toggle" aria-expanded="false" aria-label="Abrir men&uacute;">
-      <span></span><span></span><span></span>
-    </button>
-    <nav class="nav">
-      <a class="nav__link" href="index.html" aria-current="page">Inicio</a>
-      <a class="nav__link" href="repositorio.html">Repositorio</a>
-    </nav>
-  </div>
-</header>
-
-<main>
-
-  <section class="hero">
-    <div class="container hero__inner">
-      <div class="hero__left">
-        <div class="hero__kicker">
-          <span class="eyebrow">En construcci&oacute;n permanente</span>
+    <main>
+      <section class="hero">
+        <div class="container hero__inner">
+          <div class="hero__left">
+            <!-- <div class="hero__kicker"></div> -->
+            <h1 class="display-1 hero__title">VitaCora</h1>
+            <p class="lead hero__sub">
+              Notas sobre tecnolog&iacute;a, lecturas y cosas que no quiero
+              olvidar.
+            </p>
+            <div class="hero__action">
+              <a class="btn btn--ghost" href="repositorio.html"
+                >Explorar el repositorio &rarr;</a
+              >
+            </div>
+          </div>
+          <div class="hero__counter" id="hero-counter" aria-hidden="true">
+            01
+          </div>
         </div>
-        <h1 class="display-1 hero__title">VitaCora</h1>
-        <p class="lead hero__sub">
-          Un repositorio personal. Notas sobre tecnolog&iacute;a, lecturas y cosas
-          que no quiero olvidar. Cada entrada tiene su propio enlace, listo para compartir.
-        </p>
-        <div class="hero__action">
-          <a class="btn btn--ghost" href="repositorio.html">Explorar el repositorio &rarr;</a>
+        <div class="hero__rule"></div>
+      </section>
+
+      <section class="section" style="padding-top: var(--s5)">
+        <div class="container">
+          <div class="section-label">
+            <span class="eyebrow">&mdash;&nbsp; &Uacute;ltima entrada</span>
+          </div>
+          <div id="entry-featured"></div>
         </div>
+      </section>
+
+      <section class="section" style="padding-top: var(--s4)">
+        <div class="container">
+          <div class="section-label section-label__between">
+            <span class="eyebrow">&mdash;&nbsp; M&aacute;s recientes</span>
+            <a
+              class="btn btn--ghost"
+              href="repositorio.html"
+              style="padding: 0.55rem 1rem; font-size: 0.68rem"
+              >Ver todas &rarr;</a
+            >
+          </div>
+          <div class="feed" id="feed-entradas"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container site-footer__inner">
+        <span>VitaCora &copy; <span id="anio-actual"></span></span>
       </div>
-      <div class="hero__counter" id="hero-counter" aria-hidden="true">01</div>
-    </div>
-    <div class="hero__rule"></div>
-  </section>
+    </footer>
 
-  <section class="section" style="padding-top: var(--s5);">
-    <div class="container">
-      <div class="section-label">
-        <span class="eyebrow">&mdash;&nbsp; &Uacute;ltima entrada</span>
-      </div>
-      <div id="entry-featured"></div>
-    </div>
-  </section>
-
-  <section class="section" style="padding-top: var(--s4);">
-    <div class="container">
-      <div class="section-label section-label__between">
-        <span class="eyebrow">&mdash;&nbsp; M&aacute;s recientes</span>
-        <a class="btn btn--ghost" href="repositorio.html" style="padding:.55rem 1rem;font-size:.68rem">Ver todas &rarr;</a>
-      </div>
-      <div class="feed" id="feed-entradas"></div>
-    </div>
-  </section>
-
-</main>
-
-<footer class="site-footer">
-  <div class="container site-footer__inner">
-    <span>VitaCora &copy; <span id="anio-actual"></span></span>
-  </div>
-</footer>
-
-<script src="assets/js/data.js"></script>
-<script src="assets/js/main.js"></script>
-</body>
+    <script src="assets/js/data.js"></script>
+    <script src="assets/js/main.js"></script>
+  </body>
 </html>

@@ -1,0 +1,19 @@
+{
+  "name": "VitaCora",
+  "short_name": "VitaCora",
+  "description": "Repositorio personal de notas, lecturas y reflexiones.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0A0E14",
+  "theme_color": "#0A0E14",
+  "lang": "es",
+  "icons": [
+    {
+      "src": "assets/img/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

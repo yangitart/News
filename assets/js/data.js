@@ -11,7 +11,15 @@
      tema         → clave de TEMAS (o agrega una nueva línea en TEMAS)
      titulo       → título de la entrada
      resumen      → texto corto para las tarjetas (1-2 frases)
+     imagen       → (opcional) ruta a una foto de portada, ej.
+                    "assets/img/entradas/mi-foto.jpg". Si no la pones,
+                    se sigue mostrando el bloque de color + icono del
+                    tema, como hasta ahora. Ver assets/img/entradas/README.md
+     imagenAlt    → (opcional) texto alternativo de la foto de portada
      contenidoHTML → HTML completo del cuerpo: <p>, <h2>, <ul>, <blockquote>…
+                    También puedes meter fotos dentro del cuerpo con
+                    <figure><img src="assets/img/entradas/x.jpg" alt="…">
+                    <figcaption>Pie de foto opcional</figcaption></figure>
    ========================================================================= */
 
 const TEMAS = {
@@ -31,11 +39,17 @@ PLANTILLA — cópiala para crear una entrada nueva:
   tema: "tecnologia",
   titulo: "Título de la entrada",
   resumen: "Una o dos frases que resumen la entrada para las tarjetas.",
+  imagen: "assets/img/entradas/mi-foto.jpg",   // opcional, borra la línea si no tienes foto
+  imagenAlt: "Descripción corta de la foto",    // opcional
   contenidoHTML: `
     <p>Primer párrafo...</p>
     <h2>Un subtítulo</h2>
     <p>Más contenido con <strong>negritas</strong>, <em>cursivas</em>
     y <a href="https://ejemplo.com">enlaces</a>.</p>
+    <figure>
+      <img src="assets/img/entradas/otra-foto.jpg" alt="Descripción">
+      <figcaption>Pie de foto opcional.</figcaption>
+    </figure>
     <blockquote>Una cita destacada.</blockquote>
   `
 },
