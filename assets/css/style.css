@@ -587,6 +587,7 @@ body::before {
   line-height: 1.25;
   letter-spacing: -.01em;
   flex: 1;
+  overflow-wrap: break-word;
 }
 
 .entry-card__title a { transition: color .15s; }
@@ -596,6 +597,7 @@ body::before {
   font-size: .88rem;
   color: var(--cream-2);
   line-height: 1.6;
+  overflow-wrap: break-word;
 }
 
 .entry-card__link {
@@ -661,7 +663,7 @@ body::before {
   border-bottom: 1px solid var(--rim-2);
   padding-bottom: .7rem;
   max-width: 100%;
-  width: 28rem;
+  width: min(28rem, 100%);
 }
 
 .repo-search input {
@@ -1200,6 +1202,26 @@ body::before {
    RESPONSIVE
    ========================================================================= */
 
+/* Base: asegurar que NADA desborde horizontalmente en ningún breakpoint */
+html {
+  overflow-x: clip;
+}
+body {
+  overflow-x: clip;
+  min-width: 0;
+}
+.container,
+.repo-layout,
+.repo-layout > *,
+.repo-toolbar,
+#repo-results,
+.feed,
+.entry-card,
+.entry-featured {
+  min-width: 0;
+  max-width: 100%;
+}
+
 /* 960px — ocultar contador hero, colapsar featured */
 @media (max-width: 960px) {
   .hero__counter { display: none; }
@@ -1355,7 +1377,6 @@ body::before {
 
 /* 380px — teléfonos muy pequeños */
 @media (max-width: 380px) {
-  .container { padding: 0 var(--s2); }
   .brand { font-size: 1.05rem; gap: .55rem; }
   .brand__seal { width: 26px; height: 26px; }
   .btn { padding: .65rem .9rem; font-size: .66rem; }
@@ -1478,11 +1499,13 @@ a, button { -webkit-tap-highlight-color: transparent; }
   /* Un poco menos de aire en las tarjetas para ganar ancho de lectura */
   .entry-card { padding: var(--s3); }
   /* Tarjetas con foto: que la imagen no se vea recortada de más en pantallas muy estrechas */
-  .entry-card__media { aspect-ratio: 16 / 10; }
+  .entry-card__media { aspect-ratio: 16 / 10; margin: calc(var(--s3) * -1) calc(var(--s3) * -1) 0; }
+
 }
 
 @media (max-width: 380px) {
   .entry-card { padding: var(--s2) var(--s3); }
+  .entry-card__media { margin: calc(var(--s2) * -1) calc(var(--s3) * -1) 0; }
   .entry-card__title { font-size: 1.08rem; }
 }
 
