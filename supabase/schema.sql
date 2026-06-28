@@ -68,10 +68,10 @@ create policy "entradas_public_read"
 create policy "entradas_admin_write"
   on public.entradas for all
   using (
-    auth.jwt() ->> 'email' = 'tu@email.com'
+    auth.jwt() ->> 'email' = 'escobarpupoyancarlos1@email.com'
   )
   with check (
-    auth.jwt() ->> 'email' = 'tu@email.com'
+    auth.jwt() ->> 'email' = 'escobarpupoyancarlos1@email.com'
   );
 
 -- Temas: lectura pública, escritura solo admin
@@ -81,8 +81,8 @@ create policy "temas_public_read"
 
 create policy "temas_admin_write"
   on public.temas for all
-  using  (auth.jwt() ->> 'email' = 'tu@email.com')
-  with check (auth.jwt() ->> 'email' = 'tu@email.com');
+  using  (auth.jwt() ->> 'email' = 'escobarpupoyancarlos1@email.com')
+  with check (auth.jwt() ->> 'email' = 'escobarpupoyancarlos1@email.com');
 
 -- -------------------------------------------------------------------------
 -- 4. Migrar las entradas de data.js (opcional, borra si ya no las quieres)
