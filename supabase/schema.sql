@@ -64,14 +64,13 @@ create policy "entradas_public_read"
   using (publicado = true);
 
 -- Solo el admin puede INSERT / UPDATE / DELETE
--- Cambia 'tu@email.com' por tu email real de Google
 create policy "entradas_admin_write"
   on public.entradas for all
   using (
-    auth.jwt() ->> 'email' = 'escobarpupoyancarlos1@email.com'
+    auth.jwt() ->> 'email' = 'escobarpupoyancarlos1@gmail.com'
   )
   with check (
-    auth.jwt() ->> 'email' = 'escobarpupoyancarlos1@email.com'
+    auth.jwt() ->> 'email' = 'escobarpupoyancarlos1@gmail.com'
   );
 
 -- Temas: lectura pública, escritura solo admin
@@ -81,8 +80,8 @@ create policy "temas_public_read"
 
 create policy "temas_admin_write"
   on public.temas for all
-  using  (auth.jwt() ->> 'email' = 'escobarpupoyancarlos1@email.com')
-  with check (auth.jwt() ->> 'email' = 'escobarpupoyancarlos1@email.com');
+  using  (auth.jwt() ->> 'email' = 'escobarpupoyancarlos1@gmail.com')
+  with check (auth.jwt() ->> 'email' = 'escobarpupoyancarlos1@gmail.com');
 
 -- -------------------------------------------------------------------------
 -- 4. Migrar las entradas de data.js (opcional, borra si ya no las quieres)
@@ -111,3 +110,66 @@ values
   '<p>Después de varias semanas trabajando con celdas hexagonales...</p>'
 )
 on conflict (id) do nothing;
+
+-- -------------------------------------------------------------------------
+-- 5. Comentarios — cualquier usuario logueado con Google puede comentar
+-- -------------------------------------------------------------------------
+create table if not exists public.comentarios (
+  id          uuid        primary key default gen_random_uuid(),
+  entrada_id  text        not null references public.entradas(id) on delete cascade,
+  user_id     uuid        not null,
+  user_email  text        not null,
+  user_name   text,
+  user_avatar text,
+  contenido   text        not null,
+  created_at  timestamptz not null default now()
+);
+
+alter table public.comentarios enable row level security;
+
+-- cualquiera puede leer los comentarios (incluso sin login)
+create policy "comentarios_public_read"
+  on public.comentarios for select
+  using (true);
+
+-- cualquier usuario logueado puede comentar, pero solo a nombre de sí mismo
+create policy "comentarios_auth_insert"
+  on public.comentarios for insert
+  to authenticated
+  with check (auth.uid() = user_id);
+
+-- cada usuario borra solo sus propios comentarios; el admin puede borrar cualquiera
+create policy "comentarios_owner_or_admin_delete"
+  on public.comentarios for delete
+  using (
+    auth.uid() = user_id
+    or auth.jwt() ->> 'email' = 'escobarpupoyancarlos1@gmail.com'
+  );
+
+-- -------------------------------------------------------------------------
+-- 6. Likes — un like por usuario por entrada
+-- -------------------------------------------------------------------------
+create table if not exists public.likes (
+  entrada_id text        not null references public.entradas(id) on delete cascade,
+  user_id    uuid        not null,
+  created_at timestamptz not null default now(),
+  primary key (entrada_id, user_id)
+);
+
+alter table public.likes enable row level security;
+
+-- cualquiera puede leer/contar los likes
+create policy "likes_public_read"
+  on public.likes for select
+  using (true);
+
+-- cualquier usuario logueado puede dar like, pero solo a nombre de sí mismo
+create policy "likes_auth_insert"
+  on public.likes for insert
+  to authenticated
+  with check (auth.uid() = user_id);
+
+-- cada usuario solo puede quitar su propio like
+create policy "likes_owner_delete"
+  on public.likes for delete
+  using (auth.uid() = user_id);

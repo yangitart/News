@@ -420,12 +420,20 @@
       '<div class="entry-ornament" aria-hidden="true"><span></span><svg viewBox="0 0 12 12"><path d="M6 0 8 4l4 2-4 2-2 4-2-4-4-2 4-2Z" fill="currentColor"/></svg><span></span></div>' +
       '<div class="entry-paper"><div class="entry-content">' + n.contenidoHTML + '</div>' +
         '<div class="entry-actions">' +
+          '<button class="entry-share-btn" id="btn-like" type="button" data-liked="false">' +
+            '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 8.6c0 4-7.8 9-8.8 9.6-1-.6-8.8-5.6-8.8-9.6C3.2 5.7 5.4 3.6 8 3.6c1.7 0 3.2.9 4 2.3.8-1.4 2.3-2.3 4-2.3 2.6 0 4.8 2.1 4.8 5z"/></svg>' +
+            ' <span id="like-count">0</span> Me gusta</button>' +
           '<button class="entry-share-btn" id="btn-compartir" type="button">' +
             '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>' +
             ' Copiar enlace</button>' +
           '<a class="entry-share-btn" target="_blank" rel="noopener" href="https://wa.me/?text=' + encodeURIComponent(n.titulo + " — " + location.href) + '">' +
             '<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.8-2-.9-.3-.1-.5-.1-.6.1-.2.3-.7.9-.9 1-.2.2-.3.2-.6.1-.9-.4-1.8-1-2.6-1.8-.7-.7-1.3-1.5-1.7-2.3-.1-.2 0-.4.1-.5.2-.2.4-.5.6-.7.1-.2.1-.4 0-.6-.1-.2-.6-1.5-.8-2-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.3.3-1 1-.1 2.4.9 1.4 1.6 2 2.9 3.2 1.7 1.4 3.1 1.9 3.6 2.1.5.2.8.1 1.1-.1.3-.3 1-.9 1.2-1.2.2-.3.4-.3.6-.2l1.9.9c.2.1.4.2.5.3.1.2.1.9-.2 1.3z"/><path d="M12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.6 1.4 5.1L2 22l5-1.3c1.4.8 3.1 1.2 4.9 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2zm0 18c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-2.9.8.8-2.8-.2-.3C4.4 15 4 13.5 4 12c0-4.4 3.6-8 8-8s8 3.6 8 8-3.6 8-8 8z"/></svg>' +
             ' WhatsApp</a></div></div>' +
+      '<section class="entry-comments" id="entry-comments">' +
+        '<h2 class="entry-comments__title">Comentarios</h2>' +
+        '<div id="comments-gate"></div>' +
+        '<div id="comments-list" class="comments-list"></div>' +
+      '</section>' +
       relacionadasHTML +
       '<nav class="entry-nav" aria-label="Navegación entre entradas">' +
         navItem(ant, "← Entrada anterior", "entry-nav__item--prev") +
@@ -449,7 +457,145 @@
         }
       });
     }
+    initComentariosYLikes(n.id);
     activarAnunciosPendientes();
+  }
+
+  /* =======================================================================
+     COMENTARIOS Y LIKES (cualquier usuario logueado con Google, no solo admin)
+     ========================================================================= */
+  function initComentariosYLikes(entradaId) {
+    var btnLike   = document.getElementById("btn-like");
+    var likeCount = document.getElementById("like-count");
+    var gate      = document.getElementById("comments-gate");
+    var lista     = document.getElementById("comments-list");
+    if (!gate || !lista) return;
+
+    function escHTML(str) { var d = document.createElement("div"); d.textContent = str; return d.innerHTML; }
+    function formatFechaComentario(iso) {
+      return new Date(iso).toLocaleDateString("es-ES", { day: "numeric", month: "short", year: "numeric" });
+    }
+
+    function pintarLike() {
+      return Promise.all([fetchLikesCount(entradaId), fetchMiLike(entradaId)]).then(function(r) {
+        if (likeCount) likeCount.textContent = r[0];
+        if (btnLike) btnLike.setAttribute("data-liked", r[1] ? "true" : "false");
+      }).catch(function(e) { console.error("Error cargando likes", e); });
+    }
+
+    function pintarComentarios() {
+      return Promise.all([fetchComentarios(entradaId), getUser()]).then(function(r) {
+        var comentarios = r[0], user = r[1];
+        if (!comentarios.length) {
+          lista.innerHTML = '<p class="comments-empty">Todavía no hay comentarios. Sé el primero.</p>';
+          return;
+        }
+        lista.innerHTML = comentarios.map(function(c) {
+          var puedeBorrar = user && user.id === c.user_id;
+          var avatar = c.user_avatar
+            ? '<img class="comment-item__avatar" src="' + escHTML(c.user_avatar) + '" alt="" loading="lazy">'
+            : '<span class="comment-item__avatar"></span>';
+          return (
+            '<div class="comment-item">' + avatar +
+              '<div class="comment-item__body">' +
+                '<div class="comment-item__head">' +
+                  '<span class="comment-item__name">' + escHTML(c.user_name || c.user_email) + '</span>' +
+                  '<span class="comment-item__date">' + formatFechaComentario(c.created_at) + '</span>' +
+                  (puedeBorrar ? '<button class="comment-item__del" data-id="' + c.id + '">Borrar</button>' : '') +
+                '</div>' +
+                '<p class="comment-item__text">' + escHTML(c.contenido) + '</p>' +
+              '</div>' +
+            '</div>'
+          );
+        }).join('');
+        lista.querySelectorAll(".comment-item__del").forEach(function(b) {
+          b.addEventListener("click", function() {
+            if (!confirm("¿Borrar este comentario?")) return;
+            deleteComentario(b.getAttribute("data-id")).then(pintarComentarios)
+              .catch(function(e) { alert("Error al borrar: " + e.message); });
+          });
+        });
+      }).catch(function(e) {
+        lista.innerHTML = '<p class="comments-empty">No se pudieron cargar los comentarios.</p>';
+        console.error(e);
+      });
+    }
+
+    function pintarGate() {
+      return getUser().then(function(user) {
+        if (!user) {
+          gate.innerHTML =
+            '<div class="comments-gate">' +
+              '<span class="comments-gate__text">Inicia sesión con Google para comentar y dar like.</span>' +
+              '<button class="btn btn--ghost" id="btn-comment-login" style="padding:.6rem 1.1rem;font-size:.7rem">Iniciar sesión</button>' +
+            '</div>';
+          var loginBtn = document.getElementById("btn-comment-login");
+          if (loginBtn) loginBtn.addEventListener("click", function() {
+            signInWithGoogle().catch(function(e) { alert(e.message); });
+          });
+          return;
+        }
+        var meta   = user.user_metadata || {};
+        var avatar = meta.avatar_url || meta.picture;
+        gate.innerHTML =
+          '<form class="comment-form" id="comment-form">' +
+            '<div class="comment-form__user">' +
+              (avatar ? '<img class="comment-form__avatar" src="' + escHTML(avatar) + '" alt="">' : '') +
+              '<span>' + escHTML(meta.full_name || meta.name || user.email) + '</span>' +
+            '</div>' +
+            '<textarea class="comment-textarea" id="comment-texto" placeholder="Escribe un comentario…" maxlength="1000" required></textarea>' +
+            '<div class="comment-form__actions">' +
+              '<button type="button" class="btn btn--ghost" id="btn-comment-logout" style="padding:.55rem 1rem;font-size:.68rem">Cerrar sesión</button>' +
+              '<button type="submit" class="btn btn--primary" style="padding:.6rem 1.3rem;font-size:.7rem">Comentar</button>' +
+            '</div>' +
+          '</form>';
+        var form = document.getElementById("comment-form");
+        form.addEventListener("submit", function(ev) {
+          ev.preventDefault();
+          var textarea = document.getElementById("comment-texto");
+          var texto    = textarea.value.trim();
+          if (!texto) return;
+          var submitBtn = form.querySelector('button[type="submit"]');
+          submitBtn.disabled = true;
+          addComentario(entradaId, texto).then(function() {
+            textarea.value = "";
+            return pintarComentarios();
+          }).catch(function(e) {
+            alert("Error al comentar: " + e.message);
+          }).finally(function() { submitBtn.disabled = false; });
+        });
+        var logoutBtn = document.getElementById("btn-comment-logout");
+        if (logoutBtn) logoutBtn.addEventListener("click", function() {
+          sbSignOut().then(function() {
+            pintarGate(); pintarLike(); pintarComentarios();
+          });
+        });
+      });
+    }
+
+    if (btnLike) {
+      btnLike.addEventListener("click", function() {
+        getUser().then(function(user) {
+          if (!user) { signInWithGoogle().catch(function(e) { alert(e.message); }); return; }
+          btnLike.disabled = true;
+          toggleLike(entradaId).then(pintarLike)
+            .catch(function(e) { alert("Error: " + e.message); })
+            .finally(function() { btnLike.disabled = false; });
+        });
+      });
+    }
+
+    pintarGate();
+    pintarLike();
+    pintarComentarios();
+
+    // Si el usuario inicia/cierra sesión (incluido el regreso del login con
+    // Google), refrescamos solo este bloque, sin recargar toda la página.
+    _sb.auth.onAuthStateChange(function() {
+      pintarGate();
+      pintarLike();
+      pintarComentarios();
+    });
   }
 
   /* =======================================================================
