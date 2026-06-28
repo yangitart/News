@@ -222,7 +222,7 @@
   }
 
   /* =======================================================================
-     NAV
+     NAV — hamburguesa
      ========================================================================= */
   function initNav() {
     var toggle = document.querySelector(".nav-toggle");
@@ -246,6 +246,99 @@
     window.addEventListener("resize", function() {
       if (window.innerWidth > 768 && nav.classList.contains("is-open")) setOpen(false);
     });
+  }
+
+  /* =======================================================================
+     NAV AUTH — login / avatar en la barra de navegación (todas las páginas)
+     ========================================================================= */
+  var ADMIN_EMAIL = 'escobarpupoyancarlos1@gmail.com';
+
+  function initNavAuth() {
+    var slot = document.getElementById("nav-auth-slot");
+    if (!slot) return;
+
+    function render() {
+      getUser().then(function(user) {
+        if (!user) {
+          // No logueado → botón "Iniciar sesión"
+          slot.innerHTML =
+            '<button class="nav-auth-btn nav-auth-btn--login" id="nav-btn-login" title="Iniciar sesión con Google">' +
+              '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>' +
+              '<span class="nav-auth-btn__label">Iniciar sesión</span>' +
+            '</button>';
+          var btn = document.getElementById("nav-btn-login");
+          if (btn) btn.addEventListener("click", function() {
+            signInWithGoogle().catch(function(e) { console.error(e); });
+          });
+          return;
+        }
+
+        // Logueado → avatar + dropdown
+        var meta   = user.user_metadata || {};
+        var avatar = meta.avatar_url || meta.picture;
+        var nombre = meta.full_name || meta.name || user.email;
+        var esAdmin = (user.email === ADMIN_EMAIL);
+
+        var avatarHTML = avatar
+          ? '<img class="nav-auth-avatar__img" src="' + avatar + '" alt="' + nombre + '">'
+          : '<span class="nav-auth-avatar__initials">' + (nombre.charAt(0).toUpperCase()) + '</span>';
+
+        slot.innerHTML =
+          '<div class="nav-auth-user" id="nav-auth-user">' +
+            '<button class="nav-auth-avatar" id="nav-auth-toggle" aria-expanded="false" aria-label="Menú de cuenta" title="' + nombre + '">' +
+              '<span class="nav-auth-avatar__wrap">' + avatarHTML + '</span>' +
+              (esAdmin ? '<span class="nav-auth-badge" title="Admin">A</span>' : '') +
+            '</button>' +
+            '<div class="nav-auth-dropdown" id="nav-auth-dropdown" hidden>' +
+              '<div class="nav-auth-dropdown__info">' +
+                '<span class="nav-auth-dropdown__name">' + nombre + '</span>' +
+                '<span class="nav-auth-dropdown__email">' + user.email + '</span>' +
+                (esAdmin ? '<span class="nav-auth-dropdown__role">Administrador</span>' : '') +
+              '</div>' +
+              (esAdmin ? '<a class="nav-auth-dropdown__item" href="admin.html"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="1"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Panel Admin</a>' : '') +
+              '<button class="nav-auth-dropdown__item nav-auth-dropdown__item--danger" id="nav-btn-logout"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Cerrar sesión</button>' +
+            '</div>' +
+          '</div>';
+
+        // Toggle dropdown
+        var toggleBtn = document.getElementById("nav-auth-toggle");
+        var dropdown  = document.getElementById("nav-auth-dropdown");
+        if (toggleBtn && dropdown) {
+          toggleBtn.addEventListener("click", function(e) {
+            e.stopPropagation();
+            var open = !dropdown.hidden;
+            dropdown.hidden = open;
+            toggleBtn.setAttribute("aria-expanded", open ? "false" : "true");
+          });
+          document.addEventListener("click", function closeDD(e) {
+            var wrap = document.getElementById("nav-auth-user");
+            if (wrap && !wrap.contains(e.target)) {
+              dropdown.hidden = true;
+              toggleBtn.setAttribute("aria-expanded", "false");
+            }
+          });
+          document.addEventListener("keydown", function(e) {
+            if (e.key === "Escape" && !dropdown.hidden) {
+              dropdown.hidden = true;
+              toggleBtn.setAttribute("aria-expanded", "false");
+              toggleBtn.focus();
+            }
+          });
+        }
+
+        // Logout
+        var logoutBtn = document.getElementById("nav-btn-logout");
+        if (logoutBtn) logoutBtn.addEventListener("click", function() {
+          sbSignOut().then(function() { render(); }).catch(function(e) { console.error(e); });
+        });
+
+      }).catch(function(err) { console.error("NavAuth error:", err); });
+    }
+
+    render();
+
+    // Re-render si cambia la sesión (tras redirect OAuth, etc.)
+    _sb.auth.onAuthStateChange(function() { render(); });
   }
 
   /* =======================================================================
@@ -545,7 +638,6 @@
             '</div>' +
             '<textarea class="comment-textarea" id="comment-texto" placeholder="Escribe un comentario…" maxlength="1000" required></textarea>' +
             '<div class="comment-form__actions">' +
-              '<button type="button" class="btn btn--ghost" id="btn-comment-logout" style="padding:.55rem 1rem;font-size:.68rem">Cerrar sesión</button>' +
               '<button type="submit" class="btn btn--primary" style="padding:.6rem 1.3rem;font-size:.7rem">Comentar</button>' +
             '</div>' +
           '</form>';
@@ -563,12 +655,6 @@
           }).catch(function(e) {
             alert("Error al comentar: " + e.message);
           }).finally(function() { submitBtn.disabled = false; });
-        });
-        var logoutBtn = document.getElementById("btn-comment-logout");
-        if (logoutBtn) logoutBtn.addEventListener("click", function() {
-          sbSignOut().then(function() {
-            pintarGate(); pintarLike(); pintarComentarios();
-          });
         });
       });
     }
@@ -589,8 +675,6 @@
     pintarLike();
     pintarComentarios();
 
-    // Si el usuario inicia/cierra sesión (incluido el regreso del login con
-    // Google), refrescamos solo este bloque, sin recargar toda la página.
     _sb.auth.onAuthStateChange(function() {
       pintarGate();
       pintarLike();
@@ -603,6 +687,7 @@
      ========================================================================= */
   await cargarDatos();
   initNav();
+  initNavAuth();
   initInicio();
   initRepositorio();
   initEntrada();

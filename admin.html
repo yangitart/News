@@ -112,6 +112,8 @@
         Admin
       </a>
     </nav>
+    <!-- Auth slot: siempre visible, fuera del menú hamburguesa -->
+    <div id="nav-auth-slot" style="flex-shrink:0;display:flex;align-items:center;"></div>
   </div>
 </header>
 
@@ -288,8 +290,85 @@ $('btn-logout').addEventListener('click', async () => { await sbSignOut(); locat
 $('btn-logout-forbidden').addEventListener('click', async () => { await sbSignOut(); location.reload(); });
 
 _sb.auth.onAuthStateChange(function(_event, session) {
+  renderNavAuth();
   if (session) init();
 });
+
+/* =========================================================
+   NAV AUTH — avatar/login en el nav (igual que en el resto del sitio)
+   ========================================================= */
+function renderNavAuth() {
+  const slot = document.getElementById('nav-auth-slot');
+  if (!slot) return;
+  getUser().then(user => {
+    if (!user) {
+      slot.innerHTML =
+        '<button class="nav-auth-btn nav-auth-btn--login" id="nav-btn-login" title="Iniciar sesión con Google">' +
+          '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>' +
+          '<span class="nav-auth-btn__label">Iniciar sesión</span>' +
+        '</button>';
+      const btn = document.getElementById('nav-btn-login');
+      if (btn) btn.addEventListener('click', () => signInWithGoogle().catch(e => console.error(e)));
+      return;
+    }
+
+    const meta    = user.user_metadata || {};
+    const avatar  = meta.avatar_url || meta.picture;
+    const nombre  = meta.full_name || meta.name || user.email;
+    const esAdmin = user.email === ADMIN_EMAIL;
+
+    const avatarHTML = avatar
+      ? `<img class="nav-auth-avatar__img" src="${avatar}" alt="${nombre}">`
+      : `<span class="nav-auth-avatar__initials">${nombre.charAt(0).toUpperCase()}</span>`;
+
+    slot.innerHTML =
+      '<div class="nav-auth-user" id="nav-auth-user">' +
+        '<button class="nav-auth-avatar" id="nav-auth-toggle" aria-expanded="false" aria-label="Menú de cuenta" title="' + nombre + '">' +
+          '<span class="nav-auth-avatar__wrap">' + avatarHTML + '</span>' +
+          (esAdmin ? '<span class="nav-auth-badge" title="Admin">A</span>' : '') +
+        '</button>' +
+        '<div class="nav-auth-dropdown" id="nav-auth-dropdown" hidden>' +
+          '<div class="nav-auth-dropdown__info">' +
+            '<span class="nav-auth-dropdown__name">' + nombre + '</span>' +
+            '<span class="nav-auth-dropdown__email">' + user.email + '</span>' +
+            (esAdmin ? '<span class="nav-auth-dropdown__role">Administrador</span>' : '') +
+          '</div>' +
+          '<button class="nav-auth-dropdown__item nav-auth-dropdown__item--danger" id="nav-btn-logout-dd"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Cerrar sesión</button>' +
+        '</div>' +
+      '</div>';
+
+    const toggleBtn = document.getElementById('nav-auth-toggle');
+    const dropdown  = document.getElementById('nav-auth-dropdown');
+    if (toggleBtn && dropdown) {
+      toggleBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        const wasHidden = dropdown.hidden;
+        dropdown.hidden = !wasHidden;
+        toggleBtn.setAttribute('aria-expanded', wasHidden ? 'true' : 'false');
+      });
+      document.addEventListener('click', e => {
+        const wrap = document.getElementById('nav-auth-user');
+        if (wrap && !wrap.contains(e.target)) {
+          dropdown.hidden = true;
+          toggleBtn.setAttribute('aria-expanded', 'false');
+        }
+      });
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && !dropdown.hidden) {
+          dropdown.hidden = true;
+          toggleBtn.setAttribute('aria-expanded', 'false');
+          toggleBtn.focus();
+        }
+      });
+    }
+
+    const logoutBtn = document.getElementById('nav-btn-logout-dd');
+    if (logoutBtn) logoutBtn.addEventListener('click', async () => { await sbSignOut(); location.reload(); });
+
+  }).catch(err => console.error('NavAuth error:', err));
+}
+
+renderNavAuth();
 
 /* =========================================================
    TEMAS
