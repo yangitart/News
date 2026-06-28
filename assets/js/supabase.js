@@ -48,9 +48,16 @@ async function deleteEntrada(id) {
 /* ---- Auth helpers ---- */
 
 async function signInWithGoogle() {
+  // En localhost, location.origin ya es la raíz del sitio (http://localhost:PUERTO).
+  // En GitHub Pages, el sitio vive en /News/ (repo "News" del usuario "yangitart"),
+  // así que hay que agregar ese segmento o el redirect cae fuera de la whitelist.
+  const base = location.hostname === 'localhost' || location.hostname === '127.0.0.1'
+    ? location.origin
+    : `${location.origin}/News`;
+
   const { error } = await _sb.auth.signInWithOAuth({
     provider: 'google',
-    options: { redirectTo: `${location.origin}/admin.html` }
+    options: { redirectTo: `${base}/admin.html` }
   });
   if (error) throw error;
 }
