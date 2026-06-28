@@ -1,5 +1,5 @@
 /* =========================================================================
-   VitaCora — diseño premium editorial
+   VITACORA — diseño premium editorial
    ========================================================================= */
 
 /* ---------- Tokens ---------- */
@@ -64,6 +64,31 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 button { font: inherit; border: none; background: none; cursor: pointer; color: inherit; }
 input { font: inherit; }
 :focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+.skip-link {
+  position: absolute;
+  left: -999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  z-index: 1000;
+}
+.skip-link:focus {
+  position: fixed;
+  left: var(--s2);
+  top: var(--s2);
+  width: auto;
+  height: auto;
+  overflow: visible;
+  background: var(--gold);
+  color: var(--void);
+  font-family: var(--font-mono);
+  font-size: .8rem;
+  font-weight: 600;
+  letter-spacing: .04em;
+  padding: .6rem 1.1rem;
+  border-radius: 1px;
+}
 
 .container {
   width: 100%;
@@ -211,13 +236,22 @@ body::before {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 5px;
+  gap: 6px;
   width: 44px;
   height: 44px;
   padding: 0;
   flex-shrink: 0;
+  -webkit-appearance: none;
+  appearance: none;
 }
-.nav-toggle span { width: 20px; height: 1.5px; background: var(--cream); display: block; }
+.nav-toggle span {
+  width: 22px;
+  height: 2px;
+  background: var(--cream);
+  display: block;
+  flex-shrink: 0;
+  border-radius: 1px;
+}
 
 /* ---------- Botones ---------- */
 .btn {
@@ -1216,7 +1250,6 @@ body::before {
   }
 
   .chip { padding: .5rem 1rem; }
-  .timeline-month { padding: .55rem 0; }
 
   .repo-layout {
     grid-template-columns: 1fr;
@@ -1225,14 +1258,52 @@ body::before {
   .repo-timeline {
     position: static;
     flex-direction: row;
+    align-items: center;
     overflow-x: auto;
-    gap: var(--s3);
-    padding-bottom: .6rem;
+    overflow-y: hidden;
+    gap: .5rem;
+    padding: .2rem .1rem .8rem;
     -webkit-overflow-scrolling: touch;
   }
-  .repo-timeline .timeline-year { margin-top: 0; white-space: nowrap; }
-  .repo-timeline .timeline-month { white-space: nowrap; min-width: 120px; }
-  .repo-search { width: 100%; }
+  .repo-timeline .timeline-year {
+    margin: 0;
+    padding: 0 .3rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .repo-timeline .timeline-month {
+    display: inline-flex;
+    width: auto;
+    min-width: 0;
+    flex-shrink: 0;
+    white-space: nowrap;
+    gap: .5rem;
+    padding: .5rem .9rem;
+    border: 1px solid var(--rim);
+    border-bottom: 1px solid var(--rim);
+    border-radius: 1px;
+    font-size: .78rem;
+  }
+  .repo-timeline .timeline-month[aria-pressed="true"] {
+    border-color: var(--gold);
+    background: rgba(200,147,58,.12);
+  }
+  .repo-timeline .timeline-reset {
+    flex-shrink: 0;
+    white-space: nowrap;
+    margin: 0;
+    padding: .5rem .85rem;
+    border: 1px dashed var(--signal);
+  }
+  .repo-toolbar { gap: var(--s3); }
+  .repo-search {
+    width: 100%;
+    border: 1px solid var(--rim-2);
+    border-bottom: 1px solid var(--rim-2);
+    padding: .7rem .9rem;
+    background: var(--void-2);
+  }
+  .repo-search input { font-size: 1rem; }
 
   .entry-nav { grid-template-columns: 1fr; }
   .entry-nav__item--next { text-align: left; }
@@ -1250,6 +1321,10 @@ body::before {
     align-items: flex-start;
     gap: var(--s1);
   }
+
+  .tag { padding: .34rem .8rem; gap: .4rem; }
+  .entry-card__meta { flex-wrap: wrap; gap: .5rem; }
+  .entry-featured__meta { gap: var(--s2); }
 
   .btn {
     padding: .7rem 1.1rem;
@@ -1310,7 +1385,7 @@ body::before {
 }
 
 /* =========================================================================
-   VitaCora — mejoras premium y responsive (capa añadida)
+   VITACORA — mejoras premium y responsive (capa añadida)
    Todo lo de abajo se suma al diseño existente: no se borra nada de
    arriba, solo se refina el detalle (sombras, microinteracciones,
    menú móvil, scroll y tacto en pantallas pequeñas).
@@ -1337,9 +1412,9 @@ a, button { -webkit-tap-highlight-color: transparent; }
 .nav-toggle span {
   transition: transform .3s var(--ease), opacity .3s var(--ease);
 }
-.nav-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.nav-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
 .nav-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
-.nav-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+.nav-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
 
 /* ---------- Menú móvil: deslizamiento suave en vez de aparición seca ---------- */
 @media (max-width: 768px) {

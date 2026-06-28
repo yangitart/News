@@ -1,6 +1,6 @@
 {
-  "name": "VitaCora",
-  "short_name": "VitaCora",
+  "name": "VITACORA",
+  "short_name": "VITACORA",
   "description": "Repositorio personal de notas, lecturas y reflexiones.",
   "start_url": "./index.html",
   "scope": "./",

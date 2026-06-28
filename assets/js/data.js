@@ -1,5 +1,5 @@
 /* =========================================================================
-   VitaCora — datos
+   VITACORA — datos
    =========================================================================
    Para agregar una entrada nueva, copia el objeto de PLANTILLA,
    pégalo dentro del arreglo NOTICIAS y rellena los campos.

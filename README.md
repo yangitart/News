@@ -1,4 +1,4 @@
-# VitaCora
+# VITACORA
 
 Bit&aacute;cora personal hecha en HTML, CSS y JavaScript puro (sin frameworks,
 sin proceso de compilaci&oacute;n). Pensada para publicarse directamente en
@@ -9,10 +9,11 @@ AdSense (o la red que uses).
 ## Estructura del proyecto
 
 ```
-VitaCora/
+VITACORA/
 ├── index.html                Página de inicio (hero + últimas entradas)
 ├── repositorio.html           Archivo completo, filtrable por tema y fecha
 ├── entrada.html                Plantilla genérica para ver una entrada completa
+├── 404.html                    Página de error 404 (mismo estilo del sitio)
 ├── .nojekyll                   Evita que GitHub procese el sitio con Jekyll
 ├── robots.txt                  Indica a los buscadores qué pueden indexar
 ├── sitemap.xml                 Mapa del sitio para buscadores (inicio + repositorio)
@@ -124,7 +125,7 @@ Ubicaciones (se insertan solas, sin tocar el HTML):
 
 Como mostrar anuncios suele implicar cookies, el sitio incluye un aviso
 breve la primera vez que alguien lo visita ("¿Lo aceptas? / Rechazar /
-Aceptar"). La decisión se guarda en el navegador de la persona y queda
+Aceptar"). La decisiónVITACORAda en el navegador de la persona y queda
 disponible en `window.VITACORA_CONSENT` ("aceptado" o "rechazado") por si
 en el futuro quieres condicionar la carga de anuncios personalizados a
 ese valor.
@@ -160,7 +161,7 @@ procesamiento automático de GitHub Pages.
   el título y resumen reales de cada entrada en cuanto carga la página.
   Esto ya ayuda a Google (que sí ejecuta JavaScript), pero algunos
   rastreadores de redes sociales no lo hacen, así que la vista previa de
-  un enlace compartido puede mostrar el título genérico de "Entrada ·
+  VITACORAe compartido puede mostrar el título genérico de "Entrada ·
   VitaCora" en vez del título exacto. Si en algún momento quieres una
   vista previa perfecta por entrada, la solución real es generar cada
   página en el servidor o con un paso de compilación; queda fuera del
@@ -193,5 +194,12 @@ procesamiento automático de GitHub Pages.
   `og:image` propio, y listar cada entrada individual en `sitemap.xml`
   (hoy solo lleva las dos páginas fijas, a propósito, para no tener que
   mantenerlo a mano cada vez que publiques).
+- Accesibilidad y robustez ya incluidas: enlace "Saltar al contenido
+  principal" (visible solo al navegar con teclado), aviso si alguien
+  visita el sitio con JavaScript desactivado, y el menú móvil se cierra
+  solo al tocar fuera, con la tecla Escape, al elegir un enlace o al
+  pasar a una pantalla de escritorio. También hay una página `404.html`
+  con el mismo estilo del sitio (GitHub Pages la usa automáticamente
+  cuando alguien visita una URL que no existe).
 
 ---

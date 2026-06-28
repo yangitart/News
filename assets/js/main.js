@@ -1,5 +1,5 @@
 /* =========================================================================
-   VitaCora — lógica (vanilla JS, sin dependencias)
+   VITACORA — lógica (vanilla JS, sin dependencias)
    Para publicar entradas nuevas solo edita data.js.
    Para activar anuncios o ajustar SEO, mira la sección CONFIGURACIÓN abajo.
    ========================================================================= */
@@ -26,7 +26,7 @@
   };
 
   var SITE_CONFIG = {
-    nombre: "VitaCora",
+    nombre: "VITACORA",
     /* Cambia esto por la URL real de GitHub Pages cuando publiques. */
     urlBase: "https://tu-usuario.github.io/tu-repositorio/"
   };
@@ -217,7 +217,12 @@
      AVISO DE COOKIES / CONSENTIMIENTO
      ========================================================================= */
   function initConsent() {
-    var KEY = "vitacora_consent";
+    // Mientras no haya anuncios activos (ADS_CONFIG.activo = false), no tiene
+    // sentido pedir consentimiento de cookies/anuncios: lo saltamos por ahora.
+    // En cuanto pongas ADS_CONFIG.activo = true, este aviso vuelve a aparecer solo.
+    if (!ADS_CONFIG.activo) return;
+
+    var KEY = "VITACORA_consent";
     var valor = null;
     try { valor = localStorage.getItem(KEY); } catch (e) { /* noop */ }
     window.VITACORA_CONSENT = valor;
@@ -244,7 +249,7 @@
       window.VITACORA_CONSENT = decision;
       banner.classList.remove("is-visible");
       setTimeout(function () { banner.remove(); }, 350);
-      try { document.dispatchEvent(new CustomEvent("vitacora:consent", { detail: decision })); } catch (err) { /* noop */ }
+      try { document.dispatchEvent(new CustomEvent("VITACORA:consent", { detail: decision })); } catch (err) { /* noop */ }
     });
   }
 
@@ -307,9 +312,40 @@
     var toggle = document.querySelector(".nav-toggle");
     var nav = document.querySelector(".nav");
     if (!toggle || !nav) return;
-    toggle.addEventListener("click", function () {
-      var open = nav.classList.toggle("is-open");
+
+    function setOpen(open) {
+      nav.classList.toggle("is-open", open);
       toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      toggle.setAttribute("aria-label", open ? "Cerrar men\u00fa" : "Abrir men\u00fa");
+    }
+
+    toggle.addEventListener("click", function () {
+      setOpen(!nav.classList.contains("is-open"));
+    });
+
+    /* cerrar al tocar fuera del menu */
+    document.addEventListener("click", function (e) {
+      if (!nav.classList.contains("is-open")) return;
+      if (nav.contains(e.target) || toggle.contains(e.target)) return;
+      setOpen(false);
+    });
+
+    /* cerrar con la tecla Escape, devolviendo el foco al boton */
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && nav.classList.contains("is-open")) {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+
+    /* cerrar al elegir un enlace (por si ya estabas en esa pagina) */
+    nav.querySelectorAll(".nav__link").forEach(function (link) {
+      link.addEventListener("click", function () { setOpen(false); });
+    });
+
+    /* si rotas o agrandas a escritorio con el menu abierto, lo cerramos */
+    window.addEventListener("resize", function () {
+      if (window.innerWidth > 768 && nav.classList.contains("is-open")) setOpen(false);
     });
   }
 
@@ -442,7 +478,7 @@
     var n = todas.find(function (x) { return x.id === id; });
 
     if (!n) {
-      document.title = "No encontrada \u00b7 VitaCora";
+      document.title = "No encontrada \u00b7 VITACORA";
       contenedor.innerHTML =
         '<div style="border:1px dashed var(--rim);padding:var(--s6);text-align:center;color:var(--cream-3)">' +
         '<strong style="display:block;font-family:var(--font-display);font-size:1.3rem;color:var(--cream);margin-bottom:.5rem">Entrada no encontrada</strong>' +
@@ -451,7 +487,7 @@
       return;
     }
 
-    document.title = n.titulo + " \u00b7 VitaCora";
+    document.title = n.titulo + " \u00b7 VITACORA";
     var metaDesc = document.getElementById("entrada-meta-desc");
     if (metaDesc) metaDesc.setAttribute("content", n.resumen);
     actualizarSEOEntrada(n);

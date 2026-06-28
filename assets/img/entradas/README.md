@@ -1,6 +1,6 @@
 # Imágenes de entradas
 
-Pon aquí las fotos o imágenes que quieras usar en tus entradas de VitaCora.
+Pon aquí las fotos o imágenes que quieras usar en tus entradas de VITACORA.
 No necesitas tocar HTML ni CSS: solo coloca el archivo en esta carpeta y
 referencia la ruta desde `assets/js/data.js`.
 
