@@ -127,16 +127,36 @@
       <section class="hero">
         <div class="container hero__inner">
           <div class="hero__left">
+            <div class="hero__kicker">
+              <span class="eyebrow">Cuaderno personal &middot; actualizado sin calendario fijo</span>
+            </div>
             <h1 class="display-1 hero__title">VTACORA</h1>
             <p class="lead hero__sub">
               Notas sobre tecnolog&iacute;a, lecturas y cosas que no quiero
               olvidar.
             </p>
             <div class="hero__action">
-              <a class="btn btn--ghost" href="repositorio.html"
+              <a class="btn btn--primary" href="repositorio.html"
                 >Explorar el repositorio &rarr;</a
               >
+              <a class="btn btn--ghost" href="#entry-featured"
+                >Ver &uacute;ltima entrada</a
+              >
             </div>
+            <dl class="hero__stats" id="hero-stats" aria-hidden="true">
+              <div class="hero__stat">
+                <dt>Entradas</dt>
+                <dd id="hero-stat-total">&mdash;</dd>
+              </div>
+              <div class="hero__stat">
+                <dt>Temas</dt>
+                <dd id="hero-stat-temas">&mdash;</dd>
+              </div>
+              <div class="hero__stat">
+                <dt>Desde</dt>
+                <dd id="hero-stat-desde">&mdash;</dd>
+              </div>
+            </dl>
           </div>
           <div class="hero__counter" id="hero-counter" aria-hidden="true">
             01
@@ -171,11 +191,22 @@
     </main>
 
     <footer class="site-footer">
-      <div class="container site-footer__inner">
-        <span>VTACORA &copy; <span id="anio-actual"></span></span>
+      <div class="container site-footer__top">
+        <div class="footer-brand">
+          <span class="brand__name">VTACORA</span>
+          <p class="footer-brand__tag">
+            Notas sobre tecnolog&iacute;a, lecturas y cosas que no quiero
+            olvidar.
+          </p>
+        </div>
+        <nav class="footer-nav" aria-label="Enlaces del sitio">
+          <a href="index.html">Inicio</a>
+          <a href="repositorio.html">Repositorio</a>
+          <a href="#main-contenido">Volver arriba &uarr;</a>
+        </nav>
       </div>
+      <div class="container site-footer__inner">
     </footer>
-
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <script src="assets/js/supabase.js"></script>
     <script src="assets/js/main.js"></script>

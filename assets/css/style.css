@@ -331,7 +331,34 @@ body::before {
 
 .hero__action {
   margin-top: var(--s3);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s2);
   animation: fadeUp .7s .18s var(--ease) both;
+}
+
+.hero__stats {
+  display: flex;
+  gap: var(--s5);
+  margin: var(--s5) 0 0;
+  padding-top: var(--s3);
+  border-top: 1px solid rgba(255,255,255,.08);
+  animation: fadeUp .8s .24s var(--ease) both;
+}
+.hero__stat dt {
+  font-family: var(--font-mono);
+  font-size: .62rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--cream-3);
+  margin-bottom: .25rem;
+}
+.hero__stat dd {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.5rem;
+  color: var(--gold-pale);
+  margin: 0;
 }
 
 .hero__counter {
@@ -1185,9 +1212,45 @@ body::before {
 /* ---------- Footer ---------- */
 .site-footer {
   border-top: 1px solid var(--rim);
-  padding: var(--s4) 0 var(--s5);
+  padding: var(--s5) 0 var(--s4);
   margin-top: clamp(3rem, 8vw, 7rem);
 }
+.site-footer__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--s4);
+  flex-wrap: wrap;
+  padding-bottom: var(--s4);
+  margin-bottom: var(--s4);
+  border-bottom: 1px solid rgba(255,255,255,.07);
+}
+.footer-brand { max-width: 28rem; min-width: 0; }
+.footer-brand .brand__name {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--cream);
+  display: block;
+}
+.footer-brand__tag {
+  margin: .5rem 0 0;
+  font-size: .85rem;
+  color: var(--cream-3);
+  line-height: 1.6;
+}
+.footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s4);
+  font-family: var(--font-mono);
+  font-size: .72rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.footer-nav a { color: var(--cream-3); transition: color .2s var(--ease2); }
+.footer-nav a:hover { color: var(--gold); }
+
 .site-footer__inner {
   display: flex;
   justify-content: center;
@@ -1196,6 +1259,11 @@ body::before {
   font-size: .7rem;
   color: var(--cream-3);
   letter-spacing: .06em;
+}
+
+@media (max-width: 560px) {
+  .site-footer__top { flex-direction: column; gap: var(--s3); }
+  .footer-nav { gap: var(--s3); }
 }
 
 /* =========================================================================
@@ -1477,6 +1545,7 @@ a, button { -webkit-tap-highlight-color: transparent; }
 .btn:active { transform: translateY(0); }
 
 .cookie-consent {
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   box-shadow: 0 30px 60px -22px rgba(0,0,0,.6);
 }

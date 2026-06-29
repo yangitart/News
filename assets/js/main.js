@@ -352,6 +352,19 @@
     var todas = todasOrdenadas();
     if (!todas.length) return;
     if (counterEl) counterEl.textContent = padId(todas.length);
+    var statTotalEl = document.getElementById("hero-stat-total");
+    var statTemasEl = document.getElementById("hero-stat-temas");
+    var statDesdeEl = document.getElementById("hero-stat-desde");
+    if (statTotalEl) statTotalEl.textContent = todas.length;
+    if (statTemasEl) {
+      var temasUsados = {};
+      todas.forEach(function (n) { temasUsados[n.tema] = true; });
+      statTemasEl.textContent = Object.keys(temasUsados).length;
+    }
+    if (statDesdeEl) {
+      var primera = todas[todas.length - 1];
+      statDesdeEl.textContent = parseFecha(primera.fecha).getFullYear();
+    }
     if (featuredEl) {
       featuredEl.innerHTML = entryFeaturedHTML(todas[0]);
       var tally = document.getElementById("featured-tally");
