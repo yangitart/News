@@ -696,6 +696,70 @@
   }
 
   /* =======================================================================
+     REVELADO AL HACER SCROLL
+     ========================================================================= */
+  function initRevelar() {
+    if (!("IntersectionObserver" in window)) return;
+    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) return;
+
+    var selectores = ".entry-card, .entry-featured, .section-label, .entry-related, .entry-comments";
+    var elementos = Array.prototype.slice.call(document.querySelectorAll(selectores));
+    if (!elementos.length) return;
+
+    elementos.forEach(function(el, i) {
+      el.classList.add("reveal");
+      // escalonar dentro de un mismo grupo (tarjetas hermanas)
+      var hermanos = el.parentElement ? el.parentElement.children : [el];
+      var idx = Array.prototype.indexOf.call(hermanos, el);
+      el.style.setProperty("--reveal-delay", (Math.min(idx, 6) * 70) + "ms");
+    });
+
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) {
+          e.target.classList.add("reveal--in");
+          io.unobserve(e.target);
+        }
+      });
+    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
+
+    elementos.forEach(function(el) { io.observe(el); });
+  }
+
+  /* =======================================================================
+     BARRA DE PROGRESO DE LECTURA (solo en entrada con artículo)
+     ========================================================================= */
+  function initProgresoLectura() {
+    var paper = document.querySelector(".entry-paper");
+    if (!paper) return;
+
+    var barra = document.createElement("div");
+    barra.className = "read-progress";
+    barra.setAttribute("aria-hidden", "true");
+    var fill = document.createElement("span");
+    barra.appendChild(fill);
+    document.body.appendChild(barra);
+
+    var ticking = false;
+    function actualizar() {
+      var rect = paper.getBoundingClientRect();
+      var vh = window.innerHeight || document.documentElement.clientHeight;
+      var total = rect.height - vh;
+      var avance = total > 0 ? (-rect.top) / total : 0;
+      avance = Math.max(0, Math.min(1, avance));
+      fill.style.transform = "scaleX(" + avance + ")";
+      ticking = false;
+    }
+    function onScroll() {
+      if (!ticking) { window.requestAnimationFrame(actualizar); ticking = true; }
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    actualizar();
+  }
+
+  /* =======================================================================
      ARRANQUE
      ========================================================================= */
   await cargarDatos();
@@ -705,6 +769,8 @@
   initRepositorio();
   initEntrada();
   initAds();
+  initRevelar();
+  initProgresoLectura();
   var anioEl = document.getElementById("anio-actual");
   if (anioEl) anioEl.textContent = new Date().getFullYear();
 

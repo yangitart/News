@@ -49,6 +49,9 @@ html { font-size: 100%; scroll-behavior: smooth; }
 
 body {
   margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   background: var(--void);
   color: var(--cream);
   font-family: var(--font-body);
@@ -56,6 +59,14 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+}
+
+/* El contenido principal empuja el footer hacia abajo cuando la página es corta */
+main {
+  flex: 1 0 auto;
+}
+.site-footer {
+  flex-shrink: 0;
 }
 
 img { max-width: 100%; display: block; }
@@ -1873,4 +1884,120 @@ a, button { -webkit-tap-highlight-color: transparent; }
 @media (max-width: 380px) {
   .nav-auth-avatar__wrap { width: 28px; height: 28px; }
   .nav-auth-badge { width: 12px; height: 12px; font-size: .46rem; }
+}
+
+/* =========================================================================
+   CAPA PREMIUM — revelado, progreso de lectura y micro-detalles
+   ========================================================================= */
+
+/* ---------- Revelado al hacer scroll ---------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity .7s var(--ease),
+    transform .7s var(--ease);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+.reveal--in {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+}
+
+/* ---------- Barra de progreso de lectura ---------- */
+.read-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 120;
+  background: transparent;
+  pointer-events: none;
+}
+.read-progress span {
+  display: block;
+  height: 100%;
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: left;
+  background: linear-gradient(90deg, var(--gold-dim), var(--gold), var(--gold-pale));
+  box-shadow: 0 0 12px rgba(200,147,58,.5);
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .read-progress span { transition: none; }
+}
+
+/* ---------- Botón con barrido de luz ---------- */
+.btn--primary {
+  position: relative;
+  overflow: hidden;
+}
+.btn--primary::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    100deg,
+    transparent,
+    rgba(255,255,255,.35),
+    transparent
+  );
+  transform: skewX(-18deg);
+  transition: left .6s var(--ease);
+  pointer-events: none;
+}
+.btn--primary:hover::after { left: 140%; }
+
+/* ---------- Hero: número con leve respiración ---------- */
+@media (min-width: 961px) and (prefers-reduced-motion: no-preference) {
+  .hero__counter {
+    animation: fadeUp .8s .2s var(--ease) both, flotar 9s 1s var(--ease2) infinite;
+  }
+  @keyframes flotar {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-10px); }
+  }
+}
+
+/* ---------- Brillo dorado en el sello de marca ---------- */
+.brand__seal {
+  transition: box-shadow .3s var(--ease), transform .3s var(--ease);
+}
+.brand:hover .brand__seal {
+  box-shadow: 0 0 0 1px var(--gold), 0 0 16px -2px rgba(200,147,58,.55);
+  transform: rotate(-4deg);
+}
+
+/* ---------- Entrada destacada: realce del aside ---------- */
+.entry-featured__cta svg { transition: transform .25s var(--ease); }
+
+/* ---------- Tarjeta: número con acento al hover ---------- */
+.entry-card__num { transition: color .2s var(--ease2); }
+.entry-card:hover .entry-card__num { color: var(--gold); }
+
+/* ---------- Refinamiento de foco accesible ---------- */
+.entry-card a:focus-visible,
+.entry-featured:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 4px;
+}
+
+/* ---------- Tipografía de lectura: balance de títulos ---------- */
+.display-1,
+.display-2,
+.entry-featured__title,
+.entry-card__title {
+  text-wrap: balance;
+}
+.lead, .hero__sub, .entry-featured__excerpt {
+  text-wrap: pretty;
 }
