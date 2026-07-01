@@ -11,7 +11,7 @@
   };
 
   var SITE_CONFIG = {
-    nombre: "VITACORA",
+    nombre: "VTACORA",
     urlBase: "https://tu-usuario.github.io/tu-repositorio/"
   };
 
@@ -225,6 +225,14 @@
      NAV — hamburguesa
      ========================================================================= */
   function initNav() {
+    var header = document.querySelector(".site-header");
+    if (header) {
+      var actualizarSombra = function() {
+        header.classList.toggle("is-scrolled", (window.scrollY || 0) > 10);
+      };
+      window.addEventListener("scroll", actualizarSombra, { passive: true });
+      actualizarSombra();
+    }
     var toggle = document.querySelector(".nav-toggle");
     var nav    = document.querySelector(".nav");
     if (!toggle || !nav) return;
@@ -338,7 +346,7 @@
     render();
 
     // Re-render si cambia la sesión (tras redirect OAuth, etc.)
-    _sb.auth.onAuthStateChange(function() { render(); });
+    if (window._sb) _sb.auth.onAuthStateChange(function() { render(); });
   }
 
   /* =======================================================================
@@ -474,7 +482,7 @@
     var n     = todas.find(function(x) { return x.id === id; });
 
     if (!n) {
-      document.title = "No encontrada · VITACORA";
+      document.title = "No encontrada · VTACORA";
       contenedor.innerHTML =
         '<div style="border:1px dashed var(--rim);padding:var(--s6);text-align:center;color:var(--cream-3)">' +
         '<strong style="display:block;font-family:var(--font-display);font-size:1.3rem;color:var(--cream);margin-bottom:.5rem">Entrada no encontrada</strong>' +
@@ -483,7 +491,7 @@
       return;
     }
 
-    document.title = n.titulo + " · VITACORA";
+    document.title = n.titulo + " · VTACORA";
     actualizarSEOEntrada(n);
 
     var idx  = todas.indexOf(n);
@@ -688,7 +696,7 @@
     pintarLike();
     pintarComentarios();
 
-    _sb.auth.onAuthStateChange(function() {
+    if (window._sb) _sb.auth.onAuthStateChange(function() {
       pintarGate();
       pintarLike();
       pintarComentarios();

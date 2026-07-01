@@ -6,8 +6,15 @@
 const SUPA_URL  = 'https://lctakbprkqfumhpdkedo.supabase.co';
 const SUPA_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxjdGFrYnBya3FmdW1ocGRrZWRvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI1OTI3MzksImV4cCI6MjA5ODE2ODczOX0.D_zND8P3YwJRmabBcNrpKuHUpjer5rG12cEfZXDBieo';
 
-/* El CDN expone window.supabase como objeto global */
-const _sb = window.supabase.createClient(SUPA_URL, SUPA_ANON);
+/* El CDN expone window.supabase como objeto global. Se declara con var y
+   dentro de try/catch: si el CDN no cargó, _sb queda en null y el resto de
+   la página (menú, fondo, etc.) sigue funcionando sin datos. */
+var _sb = null;
+try {
+  _sb = window.supabase.createClient(SUPA_URL, SUPA_ANON);
+} catch (e) {
+  console.error("Supabase no disponible:", e);
+}
 
 /* ---- Helpers de datos ---- */
 

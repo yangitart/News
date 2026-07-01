@@ -681,10 +681,14 @@
         location.reload();
       });
 
-      _sb.auth.onAuthStateChange(function (_event, session) {
-        renderNavAuth();
-        if (session) init();
-      });
+      // Guardado: si el CDN de Supabase no cargó, el resto de la página
+      // (hamburguesa, sombra del header, año del footer) debe seguir vivo.
+      if (window._sb) {
+        _sb.auth.onAuthStateChange(function (_event, session) {
+          renderNavAuth();
+          if (session) init();
+        });
+      }
 
       /* =========================================================
    NAV AUTH — avatar/login en el nav (igual que en el resto del sitio)
@@ -783,7 +787,7 @@
           .catch((err) => console.error("NavAuth error:", err));
       }
 
-      renderNavAuth();
+      if (window._sb) renderNavAuth();
 
       /* =========================================================
    TEMAS
@@ -1009,22 +1013,49 @@
         $("adm-form-msg").hidden = true;
       }
 
-      // hamburguesa
+      // hamburguesa + sombra del header al hacer scroll
       (function () {
+        const header = document.querySelector(".site-header");
+        if (header) {
+          const actualizarSombra = () =>
+            header.classList.toggle("is-scrolled", (window.scrollY || 0) > 10);
+          window.addEventListener("scroll", actualizarSombra, {
+            passive: true,
+          });
+          actualizarSombra();
+        }
         const toggle = document.querySelector(".nav-toggle");
         const nav = document.querySelector(".nav");
         if (!toggle || !nav) return;
-        toggle.addEventListener("click", function () {
-          const open = !nav.classList.contains("is-open");
+        function setOpen(open) {
           nav.classList.toggle("is-open", open);
-          toggle.setAttribute("aria-expanded", open);
+          toggle.setAttribute("aria-expanded", open ? "true" : "false");
+        }
+        toggle.addEventListener("click", () =>
+          setOpen(!nav.classList.contains("is-open")),
+        );
+        document.addEventListener("click", (e) => {
+          if (!nav.classList.contains("is-open")) return;
+          if (nav.contains(e.target) || toggle.contains(e.target)) return;
+          setOpen(false);
+        });
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape" && nav.classList.contains("is-open")) {
+            setOpen(false);
+            toggle.focus();
+          }
         });
       })();
 
       document.getElementById("anio-actual").textContent =
         new Date().getFullYear();
 
-      init();
+      if (window._sb) {
+        init();
+      } else {
+        $("adm-loading").textContent =
+          "No se pudo conectar con el servidor. Recarga la página.";
+      }
     </script>
   </body>
 </html>
