@@ -59,50 +59,88 @@
         letter-spacing: 0.05em;
       }
 
-      /* Tabla de entradas */
-      .adm-table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 0.9rem;
+      /* Barra "Entradas / Nueva entrada" */
+      .adm-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--s2);
+        margin-bottom: var(--s3);
+        flex-wrap: wrap;
       }
-      .adm-table th {
-        font-family: var(--font-mono);
-        font-size: 0.65rem;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        color: var(--gold-dim);
-        text-align: left;
-        padding: 0.5rem 0.75rem;
-        border-bottom: 1px solid var(--rim);
+      .adm-header__session {
+        display: flex;
+        align-items: center;
+        gap: var(--s3);
+        min-width: 0;
       }
-      .adm-table td {
-        padding: 0.65rem 0.75rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        vertical-align: top;
-        color: var(--cream-2);
+
+      /* Lista de entradas (reemplaza la tabla: funciona igual de bien
+         en escritorio y en móvil, donde una tabla de 6 columnas desborda) */
+      .adm-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+        background: var(--rim);
+        border: 1px solid var(--rim);
       }
-      .adm-table tr:hover td {
+      .adm-item {
         background: var(--void-2);
+        padding: var(--s2) var(--s3);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--s3);
+        transition: background 0.15s;
       }
-      .adm-table td:first-child {
-        font-family: var(--font-mono);
-        font-size: 0.75rem;
-        color: var(--signal);
+      .adm-item:hover {
+        background: var(--void-3);
       }
-      .adm-table .td-titulo {
+      .adm-item__main {
+        min-width: 0;
+        flex: 1;
+      }
+      .adm-item__title {
+        margin: 0 0 0.35rem;
         color: var(--cream);
         font-weight: 500;
-        max-width: 320px;
+        font-size: 0.95rem;
+        line-height: 1.35;
+        overflow-wrap: break-word;
       }
-      .adm-table .td-acciones {
-        white-space: nowrap;
+      .adm-item__sub {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.35rem 0.9rem;
+        font-family: var(--font-mono);
+        font-size: 0.68rem;
+        color: var(--cream-3);
+        letter-spacing: 0.04em;
       }
-      .adm-table .td-acciones button {
+      .adm-item__id {
+        color: var(--signal);
+      }
+      .adm-item__tema {
+        color: var(--gold-dim);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+      .tag-pub {
+        color: var(--gold);
+      }
+      .adm-item__actions {
+        display: flex;
+        gap: 0.5rem;
+        flex-shrink: 0;
+      }
+      .adm-item__actions button {
         font-family: var(--font-mono);
         font-size: 0.65rem;
         letter-spacing: 0.06em;
         text-transform: uppercase;
-        padding: 0.3rem 0.7rem;
+        padding: 0.45rem 0.85rem;
+        min-height: 36px;
         border: 1px solid var(--rim);
         border-radius: 1px;
         transition: all 0.15s;
@@ -110,11 +148,11 @@
         color: var(--cream-3);
         background: none;
       }
-      .adm-table .td-acciones button:hover {
+      .adm-item__actions button:hover {
         border-color: var(--gold);
         color: var(--cream);
       }
-      .adm-table .td-acciones button.del:hover {
+      .adm-item__actions button.del:hover {
         border-color: var(--signal);
         color: var(--signal);
       }
@@ -235,13 +273,67 @@
       }
 
       @media (max-width: 600px) {
+        .adm-wrap {
+          padding: var(--s3) var(--s2) var(--s6);
+        }
         .adm-form__grid {
           grid-template-columns: 1fr;
+        }
+        .adm-form {
+          padding: var(--s3) var(--s2);
+        }
+        .adm-form__actions {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        .adm-form__actions .btn {
+          width: 100%;
+          justify-content: center;
+        }
+        .adm-msg {
+          text-align: center;
+        }
+        /* Con menos de 16px iOS hace zoom automático al enfocar un campo */
+        .adm-input,
+        .adm-select,
+        .adm-textarea {
+          font-size: 1rem;
+        }
+        .adm-textarea {
+          min-height: 200px;
+        }
+        .adm-header {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        .adm-header__session {
+          width: 100%;
+          justify-content: space-between;
+        }
+        .adm-header__user {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          min-width: 0;
+        }
+        .adm-toolbar .btn {
+          width: 100%;
+          justify-content: center;
+        }
+        .adm-item {
+          flex-direction: column;
+          align-items: stretch;
+          gap: var(--s2);
+        }
+        .adm-item__actions button {
+          flex: 1;
+          padding: 0.7rem;
         }
       }
     </style>
   </head>
   <body>
+    <canvas id="bg-canvas" aria-hidden="true"></canvas>
     <a class="skip-link" href="#main-contenido"
       >Saltar al contenido principal</a
     >
@@ -382,7 +474,7 @@
         <div id="adm-panel" hidden>
           <div class="adm-header">
             <h1 class="display-2">Panel Admin</h1>
-            <div style="display: flex; align-items: center; gap: var(--s3)">
+            <div class="adm-header__session">
               <span class="adm-header__user" id="adm-user-email"></span>
               <button
                 class="btn btn--ghost"
@@ -395,14 +487,7 @@
           </div>
 
           <!-- Lista de entradas -->
-          <div
-            style="
-              display: flex;
-              align-items: center;
-              justify-content: space-between;
-              margin-bottom: var(--s3);
-            "
-          >
+          <div class="adm-toolbar">
             <span class="eyebrow">— Entradas</span>
             <button
               class="btn btn--primary"
@@ -547,6 +632,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <script src="assets/js/supabase.js"></script>
+    <script src="assets/js/three-bg.js"></script>
     <script>
       /* =========================================================================
    VTACORA Admin — panel de gestión
@@ -743,34 +829,33 @@
             '<p class="adm-empty">No hay entradas todavía.</p>';
           return;
         }
-        $("adm-tabla-wrap").innerHTML = `
-    <table class="adm-table">
-      <thead><tr>
-        <th>ID</th><th>Fecha</th><th>Tema</th><th>Título</th><th>Estado</th><th>Acciones</th>
-      </tr></thead>
-      <tbody>
-        ${entradas
-          .map(
-            (e) => `
-        <tr>
-          <td>${e.id}</td>
-          <td style="font-family:var(--font-mono);font-size:.75rem">${e.fecha}</td>
-          <td>${e.tema}</td>
-          <td class="td-titulo">${e.titulo}</td>
-          <td>${
-            e.publicado
-              ? '<span style="color:var(--gold);font-family:var(--font-mono);font-size:.65rem">✓ Publicado</span>'
-              : '<span class="tag-draft">Borrador</span>'
-          }</td>
-          <td class="td-acciones">
+        $("adm-tabla-wrap").innerHTML =
+          '<div class="adm-list">' +
+          entradas
+            .map(
+              (e) => `
+        <article class="adm-item">
+          <div class="adm-item__main">
+            <p class="adm-item__title">${e.titulo}</p>
+            <div class="adm-item__sub">
+              <span class="adm-item__id">Nº ${e.id}</span>
+              <span>${e.fecha}</span>
+              <span class="adm-item__tema">${e.tema}</span>
+              ${
+                e.publicado
+                  ? '<span class="tag-pub">✓ Publicado</span>'
+                  : '<span class="tag-draft">Borrador</span>'
+              }
+            </div>
+          </div>
+          <div class="adm-item__actions">
             <button data-id="${e.id}" class="btn-editar">Editar</button>
             <button data-id="${e.id}" class="btn-del del">Borrar</button>
-          </td>
-        </tr>`,
-          )
-          .join("")}
-      </tbody>
-    </table>`;
+          </div>
+        </article>`,
+            )
+            .join("") +
+          "</div>";
 
         $("adm-tabla-wrap")
           .querySelectorAll(".btn-editar")

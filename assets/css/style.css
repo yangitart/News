@@ -47,6 +47,10 @@
 *, *::before, *::after { box-sizing: border-box; }
 html { font-size: 100%; scroll-behavior: smooth; }
 
+/* El atributo hidden debe ganar siempre, incluso sobre reglas con display
+   propio (p. ej. bloques flex que se muestran/ocultan desde JS) */
+[hidden] { display: none !important; }
+
 body {
   margin: 0;
   min-height: 100vh;
