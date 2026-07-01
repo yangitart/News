@@ -108,6 +108,17 @@ input { font: inherit; }
   padding: 0 var(--s3);
 }
 
+/* ---------- Fondo Three.js (polvo dorado + gema facetada) ---------- */
+#bg-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  width: 100vw;
+  height: 100vh;
+  display: block;
+  pointer-events: none;
+}
+
 /* ---------- Ruido de fondo ---------- */
 body::before {
   content: "";

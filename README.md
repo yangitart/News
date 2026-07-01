@@ -176,6 +176,13 @@ procesamiento automático de GitHub Pages.
 
 ## Notas técnicas
 
+- El fondo animado (polvo dorado + gema facetada) de `index.html`,
+  `repositorio.html` y `entrada.html` se dibuja con
+  [Three.js](https://threejs.org/) en `assets/js/three-bg.js`, cargado desde
+  jsdelivr (mismo CDN que ya se usa para Supabase). Es puramente decorativo:
+  si el navegador no soporta WebGL, si la persona tiene activado "reducir
+  movimiento" en su sistema o si el CDN no responde, el script simplemente
+  no dibuja nada y el resto de la página funciona exactamente igual.
 - Las tipografías se cargan desde Google Fonts mediante un `<link>` en el
   `<head>` de cada página. Si vas a usar el sitio sin conexión a internet,
   puedes descargarlas y servirlas localmente, pero para GitHub Pages no
