@@ -117,7 +117,10 @@ input { font: inherit; }
   height: 100vh;
   display: block;
   pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.4s var(--ease2);
 }
+#bg-canvas.is-on { opacity: 1; }
 
 /* ---------- Ruido de fondo ---------- */
 body::before {
